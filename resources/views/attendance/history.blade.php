@@ -4,7 +4,7 @@
     <div class="max-w-6xl mx-auto py-6">
 
         <!-- FILTER CARD -->
-        <div class="bg-white p-5 rounded-xl shadow-md mb-5 border-t-4 border-blue-300">
+        <div class="bg-white p-5 rounded-xl shadow-md mb-5 border-t-4 ">
 
             <form method="GET" action="" class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
@@ -15,15 +15,12 @@
                         placeholder="Cari nama atau catatan...">
                 </div>
 
-                {{-- Filter Type --}}
+                {{-- Filter Bulan --}}
                 <div>
-                    <select name="type"
+                    <input type="month" name="month" value="{{ request('month') }}"
                         class="w-full px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 focus:ring-2 focus:ring-blue-400">
-                        <option value="">Semua Type</option>
-                        <option value="check_in" {{ request('type') == 'check_in' ? 'selected' : '' }}>Check In</option>
-                        <option value="check_out" {{ request('type') == 'check_out' ? 'selected' : '' }}>Check Out</option>
-                    </select>
                 </div>
+
 
                 {{-- Per Page --}}
                 <div>
@@ -51,7 +48,7 @@
         <!-- TABLE CARD -->
         <div class="bg-white rounded-xl shadow-md border-t-4 border-blue-400">
             <div class="px-5 py-3 bg-blue-400 rounded-t-xl">
-                <h5 class="text-white text-lg font-semibold">Attendance History</h5>
+                <h5 class="text-white text-lg font-semibold">Data Absen Hari Ini</h5>
             </div>
 
             <div class="overflow-x-auto">
@@ -60,34 +57,51 @@
                         <tr class="bg-blue-50 border-b">
                             <th class="px-4 py-3 font-semibold">#</th>
                             <th class="px-4 py-3 font-semibold">User</th>
-                            <th class="px-4 py-3 font-semibold">Type</th>
-                            <th class="px-4 py-3 font-semibold">Scanned At</th>
-                            <th class="px-4 py-3 font-semibold">Note</th>
+                            <th class="px-4 py-3 font-semibold">Sekolah</th>
+                            <th class="px-4 py-3 font-semibold">Jam Masuk</th>
+                            <th class="px-4 py-3 font-semibold">Jam Keluar</th>
+                            <th class="px-4 py-3 font-semibold">Jumlah</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @forelse ($attendances as $a)
                             <tr class="border-b hover:bg-blue-50 transition">
-                                <td class="px-4 py-3">{{ $a->id }}</td>
+                                <td class="px-4 py-3">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-3">{{ $a->user->name ?? 'Unknown' }}</td>
+                                <td class="px-4 py-3">{{ $a->user->sekolah ?? 'Unknown' }}</td>
 
                                 <td class="px-4 py-3">
-                                    @if ($a->type === 'check_in')
-                                        <span class="px-3 py-1 rounded-full text-sm bg-green-100 text-green-600">Check
-                                            In</span>
+                                    @if ($a->check_in)
+                                        <span class="px-3 py-1 rounded-full text-sm bg-green-100 text-green-600">
+                                            {{ $a->check_in }}
+                                        </span>
                                     @else
-                                        <span class="px-3 py-1 rounded-full text-sm bg-red-100 text-red-600">Check
-                                            Out</span>
+                                        -
                                     @endif
                                 </td>
 
-                                <td class="px-4 py-3">{{ $a->scanned_at }}</td>
-                                <td class="px-4 py-3">{{ $a->note }}</td>
+                                <td class="px-4 py-3">
+                                    @if ($a->check_out)
+                                        <span class="px-3 py-1 rounded-full text-sm bg-red-100 text-red-600">
+                                            {{ $a->check_out }}
+                                        </span>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+
+                                <td class="px-4 py-3">
+                                    @if ($a->jumlah_jam)
+                                        {{ number_format($a->jumlah_jam, 2) }} jam
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-5 text-gray-500">
+                                <td colspan="6" class="text-center py-5 text-gray-500">
                                     Tidak ada data
                                 </td>
                             </tr>
@@ -95,6 +109,11 @@
                     </tbody>
 
                 </table>
+
+                <div class="mt-4">
+                    {{ $attendances->links() }}
+                </div>
+
             </div>
         </div>
 

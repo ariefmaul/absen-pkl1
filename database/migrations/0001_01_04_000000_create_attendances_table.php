@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('rfid')->nullable();
+            $table->string('check_in')->nullable();
+            $table->string('check_out')->nullable();
             $table->dateTime('scanned_at');
-            $table->enum('type', ['in', 'out'])->default('in');
+            // $table->enum('type', ['in', 'out'])->default('in');
             $table->string('note')->nullable();
             $table->timestamps();
         });

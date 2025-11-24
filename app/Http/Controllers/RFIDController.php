@@ -19,97 +19,90 @@ class RFIDController extends Controller
 
     public function scan(Request $request)
     {
-        date_default_timezone_set('Asia/Jakarta');
-
         $request->validate([
-            'rfid' => 'required|string'
+            'rfid' => 'required'
         ]);
 
-        $rfid = $request->rfid;
-        $now  = Carbon::now();
+        $user = User::where('rfid', $request->rfid)->first();
 
-        // Ambil user berdasarkan RFID
-        $user = User::where('rfid', $rfid)->first();
         if (!$user) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'RFID tidak terdaftar'
+                'message' => 'RFID tidak ditemukan.'
             ], 404);
         }
 
-        // Ambil pengaturan absensi
-        $setting = AttendanceSetting::first();
-        $checkInTime  = Carbon::createFromTimeString($setting->check_in_time);
-        $checkOutTime = Carbon::createFromTimeString($setting->check_out_time);
+        $today = now()->format('Y-m-d');
+        $currentTime = now()->format('H:i:s');
 
-        // Cek absensi terakhir hari ini
-        $last = Attendance::where('user_id', $user->id)
-            ->whereDate('scanned_at', $now->toDateString())
-            ->latest('scanned_at')
+        // Ambil setting attendance
+        $setting = AttendanceSetting::first(); // ambil setting pertama
+        if (!$setting) {
+            return response()->json([
+                'message' => 'Belum ada pengaturan jam kerja.'
+            ], 400);
+        }
+
+        $checkInStart = now()->setTimeFromTimeString($setting->check_in_time)->subMinutes(15)->format('H:i:s'); // toleransi ±15 menit
+        $checkInEnd   = now()->setTimeFromTimeString($setting->check_in_time)->addMinutes(15)->format('H:i:s');
+        $checkOutTime = $setting->check_out_time;
+
+        $attendance = Attendance::where('user_id', $user->id)
+            ->whereDate('scanned_at', $today)
             ->first();
 
-        // Tentukan type otomatis
-        $type = $last && $last->type === 'in' ? 'out' : 'in';
+        // Belum ada attendance => Check In
+        if (!$attendance) {
+            if ($currentTime >= $checkInStart) {
+                $attendance = Attendance::create([
+                    'user_id' => $user->id,
+                    'rfid' => $request->rfid,
+                    'check_in' => $currentTime,
+                    'scanned_at' => now(),
+                    'note' => null,
+                ]);
 
-        // =============================
-        // ❌ CEK AGAR TIDAK BISA 2X CHECK-IN
-        // =============================
-        if ($type === 'in') {
-            $sudahCheckIn = Attendance::where('user_id', $user->id)
-                ->whereDate('scanned_at', $now->toDateString())
-                ->where('type', 'in')
-                ->exists();
-
-            if ($sudahCheckIn) {
                 return response()->json([
-                    'status' => 'error',
-                    'message' => 'Anda sudah check-in hari ini'
-                ], 422);
+                    'data' => [
+                        'user' => $user,
+                        'type' => 'Absen Masuk',
+                        'scanned_at' => $attendance->check_in
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Belum waktunya absen masuk.'
+                ], 400);
             }
         }
 
+        // Sudah check-in tapi belum check-out => Check Out
+        if ($attendance->check_out === null) {
+            if ($currentTime >= $checkOutTime) {
+                $attendance->update([
+                    'check_out' => $currentTime,
+                ]);
 
-
-        // =============================
-        // ⛔ CEGAH CHECK-IN SEBELUM WAKTU
-        // =============================
-        if ($type === 'in' && $now->lt($checkInTime)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => "Belum waktunya check-in. Buka jam " . $checkInTime->format('H:i')
-            ], 422);
+                return response()->json([
+                    'data' => [
+                        'user' => $user,
+                        'type' => 'Absen Keluar',
+                        'scanned_at' => $attendance->check_out
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Belum waktunya check-out.'
+                ], 400);
+            }
         }
 
-        // =============================
-        // ⛔ CEGAH CHECK-OUT SEBELUM WAKTU
-        // =============================
-        if ($type === 'out' && $now->lt($checkOutTime)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => "Belum waktunya check-out. Buka jam " . $checkOutTime->format('H:i')
-            ], 422);
-        }
-
-        // =============================
-        // ✔ SIMPAN ABSENSI
-        // =============================
-        $attendance = Attendance::create([
-            'user_id'    => $user->id,
-            'rfid'       => $rfid,
-            'type'       => $type,
-            'scanned_at' => $now,
-        ]);
-
+        // Sudah check-in dan check-out
         return response()->json([
-            'status'  => 'success',
-            'message' => "Berhasil check-$type pada " . $now->format('H:i'),
-            'data'    => [
-                'user'       => $user,              // << TAMBAH INI
-                'type'       => $type,
-                'scanned_at' => $attendance->scanned_at->format('Y-m-d H:i:s'),
-            ]
-        ]);
+            'message' => 'Anda sudah melakukan scan masuk & keluar hari ini.'
+        ], 400);
     }
+
+
 
 
 
@@ -143,23 +136,93 @@ class RFIDController extends Controller
     {
         $query = Attendance::with('user');
 
-        // Search by user name or note
+        // Search
         if ($request->search) {
             $query->whereHas('user', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%');
-            })->orWhere('note', 'like', '%' . $request->search . '%');
+            });
+        }
+        // Filter berdasarkan bulan (input type="month")
+        if ($request->month) {
+            // Format input: YYYY-MM
+            [$year, $month] = explode('-', $request->month);
+            $query->whereYear('scanned_at', $year)
+                ->whereMonth('scanned_at', $month);
         }
 
-        // Filter by type
-        if ($request->type) {
-            $query->where('type', $request->type);
-        }
-
-        // Paginate length
+        // Pagination
         $perPage = $request->per_page ?? 10;
 
         $attendances = $query->orderBy('id', 'DESC')->paginate($perPage);
 
+        // Hitung jumlah jam kerja
+        foreach ($attendances as $a) {
+            if ($a->check_in && $a->check_out) {
+                $in = \Carbon\Carbon::parse($a->check_out);
+                $out = \Carbon\Carbon::parse($a->check_in);
+                $a->jumlah_jam = $out->floatDiffInHours($in);
+            } else {
+                $a->jumlah_jam = null;
+            }
+        }
+
         return view('attendance.history', compact('attendances'));
+    }
+
+
+    public function user()
+    {
+        $users = User::orderBy('created_at', 'desc')->get();
+        return view('user.index', compact('users'));
+    }
+    public function createUser()
+    {
+        return view('user.create');
+    }
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'rfid' => 'required|string|unique:users,rfid',
+            'sekolah' => 'required',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'rfid' => $request->rfid,
+            'sekolah' => $request->sekolah,
+        ]);
+
+        return redirect()->route('attendance.user')->with('success', 'User created successfully.');
+    }
+    public function deleteUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('attendance.user')->with('success', 'User deleted successfully.');
+    }
+    public function editUser($id)
+    {
+        $user = User::findOrFail($id);
+        return view('user.edit', compact('user'));
+    }
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'rfid' => 'required|string|unique:users,rfid,' . $user->id,
+            'sekolah' => 'required|',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'rfid' => $request->rfid,
+            'sekolah' => $request->sekolah,
+        ]);
+
+        return redirect()->route('attendance.user')->with('success', 'User updated successfully.');
     }
 }

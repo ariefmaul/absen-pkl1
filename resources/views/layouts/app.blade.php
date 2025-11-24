@@ -46,6 +46,8 @@
                         class="text-blue-800 font-medium hover:text-blue-500 transition">History</a>
                     <a href="{{ route('attendance.settings') }}"
                         class="text-blue-800 font-medium hover:text-blue-500 transition">Settings</a>
+                    <a href="{{ route('attendance.user') }}"
+                        class="text-blue-800 font-medium hover:text-blue-500 transition">User</a>
                 </div>
 
             </div>

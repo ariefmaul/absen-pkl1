@@ -9,15 +9,9 @@ class Attendance extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'rfid',
-        'scanned_at',
-        'type',
-        'note',
-    ];
+    protected $guarded = ['id'];
 
-    protected $dates = ['scanned_at'];
+
 
     public function user()
     {

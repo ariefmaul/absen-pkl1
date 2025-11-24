@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'rfid' => 'RFID123456',
+            'name' => 'Arief Maulana Rizki',
+            'sekolah' => 'SMKN 2 Tasikmalaya',
+            'rfid' => '2146798597',
         ]);
     }
 }
