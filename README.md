@@ -1,3 +1,140 @@
+# Absen PKL (RFID Attendance)
+
+Singkat: aplikasi absensi siswa PKL berbasis Laravel yang menggunakan pemindaian RFID untuk mencatat check-in dan check-out. Fitur dasar yang disertakan:
+
+- Halaman scan RFID (`/scan`) untuk input manual atau dari pembaca.
+- Pengaturan waktu masuk/keluar (`/settings`).
+- Riwayat absensi dengan pagination (`/history`).
+
+**Catatan**: file penting ada di `app/Http/Controllers/RFIDController.php`, model di `app/Models`, dan view di `resources/views/attendance`.
+
+**Quick Links**
+- Scan page: `/scan`
+- Settings: `/settings`
+- History: `/history`
+
+**Seeded test user**
+- Email: `test@example.com`
+- RFID: `RFID123456`
+
+---
+
+**Persyaratan**
+
+- PHP 8.1+
+- Composer
+- MySQL (atau MariaDB)
+- Ekstensi PHP `pdo_mysql` aktif
+
+---
+
+**Setup (lokal)**
+
+1. Clone repo dan install dependensi:
+
+```powershell
+git clone <repo-url> absen-pkl
+cd 'c:/Users/ARIEF MAULANA RIZKI/absen-pkl'
+composer install
+```
+
+2. Siapkan file environment:
+
+```powershell
+copy .env.example .env
+# edit .env sesuai MySQL Anda. Contoh:
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=absen_pkl
+# DB_USERNAME=root
+# DB_PASSWORD=your_password
+```
+
+3. Buat database MySQL (contoh menggunakan CLI):
+
+```powershell
+# Jalankan di PowerShell bila mysql CLI terpasang
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS `absen_pkl` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
+
+4. Pastikan ekstensi `pdo_mysql` tersedia:
+
+```powershell
+php -m | Select-String pdo_mysql
+```
+
+5. Jalankan migrasi dan seeder contoh:
+
+```powershell
+php artisan key:generate
+php artisan migrate --force
+php artisan db:seed --class=DatabaseSeeder
+# atau jika mau bersih lalu seed
+php artisan migrate:fresh --seed
+```
+
+6. Jalankan server lokal:
+
+```powershell
+php artisan serve
+# buka http://127.0.0.1:8000/scan
+```
+
+---
+
+**Cara Menguji (manual)**
+
+- Buka `http://127.0.0.1:8000/scan` di browser. Masukkan RFID `RFID123456` dan tekan Scan.
+- Lalu buka `http://127.0.0.1:8000/history` untuk melihat catatan yang dibuat.
+
+Catatan: route web `/scan` menggunakan CSRF (form browser). Jika Anda ingin menghubungkan pembaca RFID (mis. ESP32) yang mengirim request HTTP tanpa cookie/CSRF, saya sarankan menambahkan endpoint API khusus (`/api/scan`) yang memakai token API atau middleware auth.
+
+Contoh curl untuk menguji halaman web (tidak direkomendasikan karena CSRF):
+
+```powershell
+# Contoh ini akan gagal karena CSRF; lebih aman buat endpoint API.
+curl -X POST -H "Content-Type: application/json" -d '{"rfid":"RFID123456"}' http://127.0.0.1:8000/scan -v
+```
+
+---
+
+**File penting / struktur**
+
+- `app/Http/Controllers/RFIDController.php` — logika scan, settings, history
+- `app/Models/Attendance.php`, `app/Models/AttendanceSetting.php` — model Eloquent
+- `database/migrations/*` — migrasi tabel `attendances`, `attendance_settings`, dan perubahan `users` untuk kolom `rfid`
+- `database/seeders/DatabaseSeeder.php` — membuat user contoh dengan `rfid` = `RFID123456`
+- `resources/views/attendance/scan.blade.php`, `settings.blade.php`, `history.blade.php` — tampilan
+- `resources/views/layouts/app.blade.php` — layout Bootstrap sederhana
+
+---
+
+**Troubleshooting**
+
+- Jika muncul error `View [layouts.app] not found.`, jalankan:
+
+```powershell
+php artisan view:clear
+php artisan cache:clear
+php artisan config:clear
+```
+
+- Jika migrasi gagal karena koneksi DB, periksa kredensial di `.env` dan pastikan database sudah dibuat serta `pdo_mysql` aktif.
+
+---
+
+**Langkah berikutnya (opsional yang saya bisa bantu)**
+
+- Menambahkan endpoint API `/api/scan` tanpa CSRF untuk pemindai fisik (sertakan token sederhana).
+- Membuat seeder massal untuk siswa (mis. 20 siswa) beserta RFID acak.
+- Menambahkan otentikasi admin untuk mengelola `attendance_settings` dan melihat history.
+
+Jika Anda mau, beri tahu saya opsi mana yang diinginkan dan saya akan implementasikan.
+
+---
+
+Terima kasih — bila ada preferensi lain (mis. format data, integrasi hardware tertentu), jelaskan dan saya sesuaikan README dan implementasinya.
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
