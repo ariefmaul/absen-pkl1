@@ -5,7 +5,6 @@
 
         <!-- FILTER CARD -->
         <div class="bg-white p-5 rounded-xl shadow-md mb-5 border-t-4 ">
-
             <form method="GET" action="" class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
                 {{-- Search --}}
