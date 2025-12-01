@@ -91,7 +91,7 @@ class RFIDController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'message' => 'Belum waktunya check-out.'
+                    'message' => 'Belum waktunya pulang.'
                 ], 400);
             }
         }
@@ -129,7 +129,7 @@ class RFIDController extends Controller
             $setting->update($request->only('check_in_time', 'check_out_time'));
         }
 
-        return redirect()->back()->with('success', 'Settings updated');
+        return redirect()->back()->with('success', 'Pengaturan diperbarui');
     }
 
     public function history(Request $request)
@@ -193,14 +193,14 @@ class RFIDController extends Controller
             'sekolah' => $request->sekolah,
         ]);
 
-        return redirect()->route('attendance.user')->with('success', 'User created successfully.');
+        return redirect()->route('attendance.user')->with('success', 'User Berhasil Dibuat.');
     }
     public function deleteUser($id)
     {
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('attendance.user')->with('success', 'User deleted successfully.');
+        return redirect()->route('attendance.user')->with('success', 'User Berhasil Dihapus.');
     }
     public function editUser($id)
     {
@@ -223,6 +223,6 @@ class RFIDController extends Controller
             'sekolah' => $request->sekolah,
         ]);
 
-        return redirect()->route('attendance.user')->with('success', 'User updated successfully.');
+        return redirect()->route('attendance.user')->with('success', 'User Berhasil Diperbarui.');
     }
 }

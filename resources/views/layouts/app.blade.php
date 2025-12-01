@@ -26,6 +26,7 @@
 <body class="bg-blue-50">
 
     <!-- NAVBAR -->
+    <!-- NAVBAR -->
     <nav class="bg-white shadow-md border-b-4 border-blue-300">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between h-16 items-center">
@@ -38,8 +39,19 @@
                     </span>
                 </a>
 
+                <!-- Hamburger menu button (mobile) -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-blue-800 focus:outline-none">
+                        <!-- icon burger -->
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+
                 <!-- NAV LINKS -->
-                <div class="space-x-6 hidden md:flex">
+                <div id="menu" class="hidden md:flex space-x-6">
                     <a href="{{ route('attendance.scan') }}"
                         class="text-blue-800 font-medium hover:text-blue-500 transition">Scan</a>
                     <a href="{{ route('attendance.history') }}"
@@ -51,8 +63,24 @@
                 </div>
 
             </div>
+
+            <!-- Mobile menu (hidden by default) -->
+            <div id="mobile-menu" class="md:hidden hidden flex-col space-y-2 mt-2 px-2 pb-4">
+                <a href="{{ route('attendance.scan') }}"
+                    class="block text-blue-800 font-medium hover:text-blue-500 transition">Scan</a>
+                <a href="{{ route('attendance.history') }}"
+                    class="block text-blue-800 font-medium hover:text-blue-500 transition">History</a>
+                <a href="{{ route('attendance.settings') }}"
+                    class="block text-blue-800 font-medium hover:text-blue-500 transition">Settings</a>
+                <a href="{{ route('attendance.user') }}"
+                    class="block text-blue-800 font-medium hover:text-blue-500 transition">User</a>
+            </div>
+
         </div>
     </nav>
+
+
+
 
     <!-- CONTENT -->
     <main class="max-w-4xl mx-auto mt-8 px-4">
@@ -60,7 +88,14 @@
             @yield('content')
         </div>
     </main>
+    <script>
+        const btn = document.getElementById('menu-btn');
+        const menu = document.getElementById('mobile-menu');
 
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
     <!-- SweetAlert -->
     <script>
         @if (session('success'))
