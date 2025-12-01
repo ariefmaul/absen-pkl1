@@ -186,6 +186,10 @@ class RFIDController extends Controller
             'rfid' => 'required|string|unique:users,rfid',
             'sekolah' => 'required',
         ]);
+        //jika ada rfid yang sama, maka tampilkan pemberitahuan
+        if (User::where('rfid', $request->rfid)->exists()) {
+            return redirect()->back()->withErrors(['rfid' => 'RFID sudah digunakan.'])->withInput();
+        }
 
         User::create([
             'name' => $request->name,

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.utama')
 
 @section('content')
     <div class="max-w-6xl mx-auto py-6">

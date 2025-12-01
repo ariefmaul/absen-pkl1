@@ -18,9 +18,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Arief Maulana Rizki',
+            'name' => 'arief',
             'sekolah' => 'SMKN 2 Tasikmalaya',
             'rfid' => '2146798597',
+            'password' => bcrypt('password'),
         ]);
     }
 }
