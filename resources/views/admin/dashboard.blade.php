@@ -55,22 +55,22 @@
 
     <!-- Menu Actions -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-300 ">
             <h3 class="text-xl font-semibold text-blue-800 mb-4">Manajemen User</h3>
             <div class="space-y-2">
-                <a href="{{ route('admin.users.index') }}" class="block text-blue-600 hover:underline">→ Lihat Daftar
+                <a href="{{ route('admin.users.index') }}" class="block text-blue-600 hover:underline"> Lihat Daftar
                     User</a>
-                <a href="{{ route('admin.users.create') }}" class="block text-blue-600 hover:underline">→ Tambah User
+                <a href="{{ route('admin.users.create') }}" class="block text-blue-600 hover:underline"> Tambah User
                     Baru</a>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+        <div class="bg-white p-6 rounded-lg shadow-md border border-gray-300">
             <h3 class="text-xl font-semibold text-green-800 mb-4">Manajemen Absensi</h3>
             <div class="space-y-2">
-                <a href="{{ route('admin.attendance.history') }}" class="block text-green-600 hover:underline">→ Lihat
+                <a href="{{ route('admin.attendance.history') }}" class="block text-green-600 hover:underline"> Lihat
                     Riwayat Absen</a>
-                <a href="{{ route('admin.attendance.manual') }}" class="block text-green-600 hover:underline">→ Input Absen
+                <a href="{{ route('admin.attendance.manual') }}" class="block text-green-600 hover:underline"> Input Absen
                     Manual</a>
             </div>
         </div>

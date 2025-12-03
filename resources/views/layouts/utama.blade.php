@@ -91,7 +91,7 @@
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit"
-                            class="block w-full text-left text-blue-800 font-medium hover:text-blue-500 transition">Logout</button>
+                            class="block w-full text-left text-blue-800 font-medium hover:text-red-500 transition">Logout</button>
                     </form>
                 @else
                     <a href="{{ route('login') }}"

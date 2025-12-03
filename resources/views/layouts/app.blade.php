@@ -27,7 +27,7 @@
 
     <!-- NAVBAR -->
     <!-- NAVBAR -->
-    <nav class="bg-white shadow-md border-b-4 border-blue-300">
+    <nav class="bg-white shadow-md border-gray-300 border-blue-300">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between h-16 items-center">
 
@@ -92,7 +92,7 @@
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit"
-                            class="block w-full text-left text-blue-800 font-medium hover:text-blue-500 transition">Logout</button>
+                            class="block w-full text-left text-blue-800 font-medium hover:text-red-500 transition">Logout</button>
                     </form>
                 @else
                     <a href="{{ route('login') }}"
@@ -108,7 +108,7 @@
 
     <!-- CONTENT -->
     <main class="max-w-4xl mx-auto mt-8 px-4">
-        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-400">
+        <div class="bg-white p-6 rounded-xl shadow-lg border-gray-300 border-blue-400">
             @yield('content')
         </div>
     </main>
