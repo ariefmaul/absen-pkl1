@@ -34,7 +34,7 @@ Singkat: aplikasi absensi siswa PKL berbasis Laravel yang menggunakan pemindaian
 
 ```powershell
 git clone <repo-url> absen-pkl
-cd 'c:/Users/ARIEF MAULANA RIZKI/absen-pkl'
+cd 'absen-pkl'
 composer install
 ```
 
