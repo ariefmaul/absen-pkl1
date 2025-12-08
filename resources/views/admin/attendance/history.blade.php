@@ -50,7 +50,11 @@
                         <td class="border px-6 py-3">
                             {{ ($attendances->currentPage() - 1) * $attendances->perPage() + $loop->iteration }}</td>
                         <td class="border px-6 py-3 font-medium">{{ $attendance->user->name }}</td>
-                        <td class="border px-6 py-3">{{ $attendance->scanned_at->format('d-m-Y') }}</td>
+                        <td class="border px-6 py-3">
+                            {{ $attendance->scanned_at ? date('H:i', strtotime($attendance->scanned_at)) : '-' }}
+                        </td>
+
+                        </td>
                         <td class="border px-6 py-3 text-center">
                             <span class="bg-green-100 text-green-800 px-3 py-1 rounded text-sm font-medium">
                                 {{ $attendance->check_in ?? '-' }}

@@ -5,9 +5,7 @@ use App\Http\Controllers\RFIDController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+Route::get('/', [RFIDController::class, 'scanView'])->name('attendance.index');
 
 // Authentication routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

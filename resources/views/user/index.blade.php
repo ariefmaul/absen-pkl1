@@ -4,7 +4,7 @@
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-semibold text-blue-800">Daftar User</h2>
 
-        <a href="{{ route('users.create') }}"
+        <a href="{{ route('admin.users.create') }}"
             class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
             + Tambah User
         </a>
@@ -27,7 +27,7 @@
                         <td class="p-3 border">{{ $u->name }}</td>
                         <td class="p-3 border">{{ $u->sekolah }}</td>
                         <td class="p-3 border text-center">
-                            <a href="{{ route('users.edit', $u->id) }}"
+                            <a href="{{ route('admin.users.edit', $u->id) }}"
                                 class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 transition">
                                 Edit
                             </a>
@@ -37,7 +37,7 @@
                                 Hapus
                             </button>
 
-                            <form id="delete-form-{{ $u->id }}" action="{{ route('users.delete', $u->id) }}"
+                            <form id="delete-form-{{ $u->id }}" action="{{ route('admin.users.delete', $u->id) }}"
                                 method="POST" class="hidden">
                                 @csrf
                                 @method('DELETE')

@@ -57,11 +57,11 @@
                             class="text-blue-800 font-medium hover:text-blue-500 transition">Dashboard Admin</a>
                         {{-- <a href="{{ route('attendance.scan') }}"
                             class="text-blue-800 font-medium hover:text-blue-500 transition">Scan</a> --}}
-                        {{-- <a href="{{ route('attendance.history') }}"
-                            class="text-blue-800 font-medium hover:text-blue-500 transition">History</a> --}}
+                        <a href="{{ route('admin.attendance.history') }}"
+                            class="text-blue-800 font-medium hover:text-blue-500 transition">History</a>
                         <a href="{{ route('attendance.settings') }}"
                             class="text-blue-800 font-medium hover:text-blue-500 transition">Settings</a>
-                        <a href="{{ route('attendance.user') }}"
+                        <a href="{{ route('admin.users.index') }}"
                             class="text-blue-800 font-medium hover:text-blue-500 transition">User</a>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
@@ -69,6 +69,9 @@
                                 class="text-blue-800 font-medium hover:text-blue-500 transition">Logout</button>
                         </form>
                     @else
+                        <a href="{{ route('attendance.scan') }}"
+                            class="text-blue-800 font-medium hover:text-blue-500 transition">Scan</a>
+
                         <a href="{{ route('login') }}"
                             class="text-blue-800 font-medium hover:text-blue-500 transition">Login</a>
                     @endauth
@@ -83,11 +86,11 @@
                         class="block text-blue-800 font-medium hover:text-blue-500 transition">Dashboard Admin</a>
                     {{-- <a href="{{ route('attendance.scan') }}"
                         class="block text-blue-800 font-medium hover:text-blue-500 transition">Scan</a> --}}
-                    {{-- <a href="{{ route('attendance.history') }}"
-                        class="block text-blue-800 font-medium hover:text-blue-500 transition">History</a> --}}
+                    <a href="{{ route('admin.attendance.history') }}"
+                        class="block text-blue-800 font-medium hover:text-blue-500 transition">History</a>
                     <a href="{{ route('attendance.settings') }}"
                         class="block text-blue-800 font-medium hover:text-blue-500 transition">Settings</a>
-                    <a href="{{ route('attendance.user') }}"
+                    <a href="{{ route('admin.users.index') }}"
                         class="block text-blue-800 font-medium hover:text-blue-500 transition">User</a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
@@ -95,6 +98,9 @@
                             class="block w-full text-left text-blue-800 font-medium hover:text-red-500 transition">Logout</button>
                     </form>
                 @else
+                    <a href="{{ route('attendance.scan') }}"
+                        class="text-blue-800 font-medium hover:text-blue-500 transition">Scan</a>
+
                     <a href="{{ route('login') }}"
                         class="block text-blue-800 font-medium hover:text-blue-500 transition">Login</a>
                 @endauth
