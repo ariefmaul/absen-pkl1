@@ -83,6 +83,10 @@ php artisan serve
 
 ---
 
+**Akun**
+username: arief
+password : password
+---
 **Cara Menguji (manual)**
 
 - Buka `http://127.0.0.1:8000/scan` di browser. Masukkan RFID `RFID123456` dan tekan Scan.

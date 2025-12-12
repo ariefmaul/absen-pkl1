@@ -6,6 +6,13 @@ use App\Models\Attendance;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AbsenExport;
+
+use App\Exports\AttendanceExport;
+
+
+
 
 class AdminController extends Controller
 {
@@ -235,5 +242,24 @@ class AdminController extends Controller
             return response()->json(['message' => 'Absen keluar berhasil'], 200);
         }
         return back()->with('success', 'Absen keluar berhasil');
+    }
+    public function exportExcel(Request $request)
+    {
+        $query = Attendance::with('user');
+
+        if ($request->search) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->month) {
+            $query->whereMonth('scanned_at', date('m', strtotime($request->month)))
+                ->whereYear('scanned_at', date('Y', strtotime($request->month)));
+        }
+
+        $attendances = $query->get();
+
+        return Excel::download(new AbsenExport($attendances), 'riwayat_absensi.xlsx');
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\RFIDController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
 
+
 Route::get('/', [RFIDController::class, 'scanView'])->name('attendance.index');
 
 // Authentication routes
@@ -30,6 +31,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/attendance/manual', [AdminController::class, 'attendanceManualStore'])->name('attendance.manual.store');
     Route::post('/attendance/check-in', [AdminController::class, 'quickCheckIn'])->name('attendance.checkIn');
     Route::post('/attendance/check-out', [AdminController::class, 'quickCheckOut'])->name('attendance.checkOut');
+    Route::get('/admin/attendance/export-excel', [AdminController::class, 'exportExcel'])
+        ->name('attendance.exportExcel');
 });
 
 // RFID & Attendance Routes

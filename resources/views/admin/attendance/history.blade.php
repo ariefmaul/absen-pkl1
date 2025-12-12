@@ -26,6 +26,13 @@
                         class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500 flex-1">Filter</button>
                     <a href="{{ route('admin.attendance.history') }}"
                         class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">Reset</a>
+                    <a href="{{ route('admin.attendance.exportExcel', [
+                        'search' => request('search'),
+                        'month' => request('month'),
+                    ]) }}"
+                        class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500">
+                        Download
+                    </a>
                 </div>
             </div>
         </form>
