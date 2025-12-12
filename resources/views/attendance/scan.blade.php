@@ -65,7 +65,10 @@
                             icon: "error",
                             title: "Scan Gagal!",
                             text: data.message ?? "RFID tidak dikenali.",
-                            confirmButtonColor: "#d33"
+                            // confirmButtonColor: "#d33"
+                            timer: 2000, // otomatis menutup setelah 2 detik
+                            timerProgressBar: true, // menampilkan progress bar
+                            showConfirmButton: false, // sembunyikan tombol OK
                         });
 
                         document.getElementById('rfid').value = "";
@@ -78,12 +81,15 @@
                         icon: "success",
                         title: "Berhasil Scan!",
                         html: `
-                        <b class='text-blue-900'>${data.data.user.name}</b><br>
-                        ${data.data.type}<br>
-                        <small>${data.data.scanned_at}</small>
-                    `,
-                        confirmButtonColor: "#42a5f5"
+        <b class='text-blue-900'>${data.data.user.name}</b><br>
+        ${data.data.type}<br>
+        <small>${data.data.scanned_at}</small>
+    `,
+                        timer: 2000, // otomatis menutup setelah 2 detik
+                        timerProgressBar: true, // menampilkan progress bar
+                        showConfirmButton: false, // sembunyikan tombol OK
                     });
+
 
                     document.getElementById('rfid').value = "";
                     document.getElementById('rfid').focus();
