@@ -43,18 +43,20 @@
         <table class="w-full border-collapse bg-white shadow-md rounded-lg">
             <thead class="bg-green-600 text-white">
                 <tr>
-                    <th class="border px-6 py-3 text-left">No</th>
+                    <th class="border px-2 py-3 text-left">No</th>
                     <th class="border px-6 py-3 text-left">Nama User</th>
                     <th class="border px-6 py-3 text-left">Tanggal</th>
                     <th class="border px-6 py-3 text-center">Masuk</th>
                     <th class="border px-6 py-3 text-center">Keluar</th>
+                    <th class="border px-6 py-3 text-center">Total Waktu</th>
+
                     <th class="border px-6 py-3 text-left">Catatan</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($attendances as $attendance)
                     <tr class="border-b hover:bg-green-50">
-                        <td class="border px-6 py-3">
+                        <td class="border px-3 py-3">
                             {{ ($attendances->currentPage() - 1) * $attendances->perPage() + $loop->iteration }}</td>
                         <td class="border px-6 py-3 font-medium">{{ $attendance->user->name }}</td>
                         <td class="border px-6 py-3">
@@ -72,6 +74,12 @@
                                 {{ $attendance->check_out ?? '-' }}
                             </span>
                         </td>
+                        <td class="border px-6 py-3 text-center">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm font-medium">
+                                {{ $attendance->total_time }}
+                            </span>
+                        </td>
+
                         <td class="border px-6 py-3 text-sm text-gray-600">{{ $attendance->note ?? '-' }}</td>
                     </tr>
                 @empty

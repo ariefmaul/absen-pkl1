@@ -133,8 +133,25 @@ class AdminController extends Controller
 
         $attendances = $query->orderBy('scanned_at', 'desc')->paginate(20);
 
+        // ➕ Tambahkan perhitungan total waktu kerja
+        foreach ($attendances as $attendance) {
+            if ($attendance->check_in && $attendance->check_out) {
+                $in = strtotime($attendance->check_in);
+                $out = strtotime($attendance->check_out);
+                $diff = $out - $in;
+
+                $hours = floor($diff / 3600);
+                $minutes = floor(($diff % 3600) / 60);
+
+                $attendance->total_time = sprintf('%02d , %02d ', $hours, $minutes);
+            } else {
+                $attendance->total_time = '-';
+            }
+        }
+
         return view('admin.attendance.history', compact('attendances'));
     }
+
 
     // Manual Attendance - Form
     public function attendanceManualForm()
