@@ -14,16 +14,16 @@
             <form id="scan-form" class="space-y-4">
 
                 <label for="rfid" class="text-blue-900 font-semibold">
-                    RFID Number
+                    Tempelkan Kartu RFID Anda
                 </label>
 
                 <input type="text" id="rfid" name="rfid"
                     class="w-full px-4 py-3 rounded-lg text-lg border border-blue-200 bg-blue-50 focus:ring-2 focus:ring-blue-400 outline-none"
-                    placeholder="Tempel kartu RFID..." autocomplete="off" autofocus>
+                    placeholder="Tempel kartu RFID..." autocomplete="off" autofocus required>
 
                 <button type="submit" id="scan-btn"
                     class="w-full py-3 rounded-lg font-semibold text-white bg-blue-500 hover:bg-blue-600 transition-all shadow-md">
-                    Scan Sekarang
+                    Silahkan Tempelkan Kartu RFID di Scanner
                 </button>
 
             </form>
@@ -102,8 +102,13 @@
                         icon: "error",
                         title: "Koneksi Error",
                         text: "Tidak dapat terhubung ke server.",
-                        confirmButtonColor: "#d33"
+                        // confirmButtonColor: "#d33"
+                        timer: 2000, // otomatis menutup setelah 2 detik
+                        timerProgressBar: true, // menampilkan progress bar
+                        showConfirmButton: false, // sembunyikan tombol OK
                     });
+                    document.getElementById('rfid').focus();
+
                 });
         });
     </script>
